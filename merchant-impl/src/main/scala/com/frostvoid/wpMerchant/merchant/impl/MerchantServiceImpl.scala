@@ -20,10 +20,8 @@ class MerchantServiceImpl(persistentEntityRegistry: PersistentEntityRegistry, sy
 
   override def getMerchant(id: UUID) = ServiceCall { _ =>
     refFor(id).ask(GetMerchant).map {
-      case Some(merchant) =>
-        com.frostvoid.wpMerchant.merchant.api.Merchant(Some(id), merchant.name)
-      case None =>
-        throw NotFound(s"Merchant with id $id")
+      case Some(merchant) => com.frostvoid.wpMerchant.merchant.api.Merchant(Some(id), merchant.name)
+      case None => throw NotFound(s"Merchant with id $id")
     }
   }
 

@@ -7,7 +7,7 @@ Partial implementation of the wp-merchant api described:
 ## Instructions
 Start up lagom with `sbt runAll`
 
-view <http://localhost:9000> to confirm all services are running:
+view the service gateway at <http://localhost:9000> to confirm all services are running:
 * Merchant service should be running on port 55045
 * Item service should be running on port ????
 * Offer service should be running on port ????
