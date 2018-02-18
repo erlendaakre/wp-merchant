@@ -1,0 +1,452 @@
+---
+swagger: "2.0"
+info:
+  description: "Simple CRUD API for a lagom test project"
+  version: "1.0.2"
+  title: "WP-Merchant"
+host: "localhost"
+basePath: "/wp-merchant/v1"
+tags:
+- name: "merchant"
+  description: "Someone selling goods or services"
+- name: "item"
+  description: "An item (goods or service) to be sold"
+- name: "offer"
+  description: "An offer to sell an `item` at a specific price"
+schemes:
+- "http"
+paths:
+  /merchant:
+    post:
+      tags:
+      - "merchant"
+      summary: "Register a new merchant"
+      description: ""
+      operationId: "addMerchant"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Merchant object to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/Merchant"
+      responses:
+        201:
+          description: "Merchant registered"
+        400:
+          description: "Invalid request"
+        409:
+          description: "Merchant with that ID already exists"
+  /merchant/{merchantId}:
+    get:
+      tags:
+      - "merchant"
+      summary: "Finds Merchant by id"
+      operationId: "findMerchant"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "merchantId"
+        in: "path"
+        description: "the id of the merchant to find"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Merchant found"
+          schema:
+            $ref: "#/definitions/Merchant"
+        400:
+          description: "Invalid ID provided"
+        404:
+          description: "Merchant not found"
+    post:
+      tags:
+      - "merchant"
+      summary: "Update an existing merchant"
+      description: "Updates the properties of a Merchant object with a matching id"
+      operationId: "updateMerchant"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "merchantId"
+        in: "path"
+        description: "the id of the merchant to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Merchant object to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Merchant"
+      responses:
+        204:
+          description: "Merchant updated"
+        400:
+          description: "Invalid request"
+        404:
+          description: "No Merchant with that ID"
+    delete:
+      tags:
+      - "merchant"
+      summary: "Deletes a merchant"
+      description: ""
+      operationId: "deleteMerchant"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "merchantId"
+        in: "path"
+        description: "Merchant id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        400:
+          description: "Invalid id provided"
+        404:
+          description: "No merchant with that ID"
+  /offer:
+    post:
+      tags:
+      - "offer"
+      summary: "Create a new offer"
+      description: ""
+      operationId: "addOffer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "merchantId"
+        in: "path"
+        description: "the merchant who owns this offer"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "Offer object to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/Offer"
+      responses:
+        201:
+          description: "Offer created"
+        400:
+          description: "Invalid request"
+        404:
+          description: "No offer with that ID"
+  /offer/{offerId}:
+    get:
+      tags:
+      - "offer"
+      summary: "Finds Offer by id"
+      operationId: "findOffer"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "offerId"
+        in: "path"
+        description: "the id of the offer to find"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Offer found"
+          schema:
+            $ref: "#/definitions/Offer"
+        400:
+          description: "Invalid ID provided"
+        403:
+          description: "Offer not accessible to current user"
+        404:
+          description: "Offer not found"
+    post:
+      tags:
+      - "offer"
+      summary: "Update an existing offer"
+      description: "Updates the properties of an offer object with a matching id"
+      operationId: "updateOffer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "offerId"
+        in: "path"
+        description: "the id of the offer to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Offer object to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Offer"
+      responses:
+        204:
+          description: "Offer updated"
+        400:
+          description: "Invalid request"
+        403:
+          description: "Offer not accessible to current user"
+        404:
+          description: "No offer with that ID"
+    delete:
+      tags:
+      - "offer"
+      summary: "Deletes an offer"
+      description: ""
+      operationId: "deleteOffer"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "offerId"
+        in: "path"
+        description: "Offer id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        400:
+          description: "Invalid id provided"
+        403:
+          description: "Offer not accessible to current user"
+        404:
+          description: "No offer with that ID"
+  /offer/findByMerchant:
+    get:
+      tags:
+      - "offer"
+      summary: "Finds all offers by a specified merchant"
+      description: ""
+      operationId: "findOffersByMerchant"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "merchantId"
+        in: "query"
+        description: "Id of merchant"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "found offers"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Offer"
+        204:
+          description: "merchant has no offers"
+        400:
+          description: "Invalid id provided"
+  /item:
+    post:
+      tags:
+      - "item"
+      summary: "Create a new item"
+      description: ""
+      operationId: "addItem"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Item object to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/Item"
+      responses:
+        201:
+          description: "Item created"
+        400:
+          description: "Invalid request"
+  /item/{itemId}:
+    get:
+      tags:
+      - "item"
+      summary: "Finds Item by id"
+      operationId: "findItem"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "itemId"
+        in: "path"
+        description: "the id of the item to find"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Item found"
+          schema:
+            $ref: "#/definitions/Item"
+        400:
+          description: "Invalid ID provided"
+        403:
+          description: "Item not accessible to current user"
+        404:
+          description: "Item not found"
+    post:
+      tags:
+      - "item"
+      summary: "Update an existing item"
+      description: "Updates the properties of an item object with a matching id"
+      operationId: "updateItem"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "itemId"
+        in: "path"
+        description: "the id of the item to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Item object to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Item"
+      responses:
+        204:
+          description: "Item updated"
+        400:
+          description: "Invalid request"
+        403:
+          description: "Item not accessible to current user"
+        404:
+          description: "No item with that ID"
+    delete:
+      tags:
+      - "item"
+      summary: "Deletes an item"
+      description: ""
+      operationId: "deleteitem"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "itemId"
+        in: "path"
+        description: "Offer id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        400:
+          description: "Invalid id provided"
+        403:
+          description: "Item not accessible to current user"
+        404:
+          description: "No item with that ID"
+  /item/findByMerchant:
+    get:
+      tags:
+      - "item"
+      summary: "Finds all items by a specified merchant"
+      description: ""
+      operationId: "findItemsByMerchant"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "merchantId"
+        in: "query"
+        description: "Id of merchant"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "found "
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Item"
+        204:
+          description: "merchant has no items"
+        400:
+          description: "Invalid id provided"
+definitions:
+  Merchant:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        example: 12654312312
+      name:
+        type: "string"
+        example: "Toaster warehouse"
+    example:
+      name: "Toaster warehouse"
+      id: 12654312312
+  Item:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        example: 12654312312
+      name:
+        type: "string"
+        example: "Cylon 5000 dual slot toaster"
+      description:
+        type: "string"
+        example: "The pinnacle of toasting technology. Bread goes in, toast comes\
+          \ out"
+    example:
+      name: "Cylon 5000 dual slot toaster"
+      description: "The pinnacle of toasting technology. Bread goes in, toast comes\
+        \ out"
+      id: 12654312312
+  Offer:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        example: 12654312312
+      merchant:
+        type: "integer"
+        format: "int64"
+      price:
+        type: "number"
+        format: "double"
+        example: 29.989999999999998436805981327779591083526611328125
+      currency:
+        type: "string"
+        format: "ISO 4217 alphabetic code (currency code)"
+        example: "GBP"
+        minLength: 3
+        maxLength: 3
+      offerStart:
+        type: "string"
+        format: "date-time"
+        example: "2017-07-21T17:32:28Z"
+      offerEnd:
+        type: "string"
+        format: "date-time"
+        example: "2017-07-21T17:32:28Z"
+    example:
+      price: 29.989999999999998436805981327779591083526611328125
+      merchant: 0
+      currency: "GBP"
+      id: 12654312312
+      offerStart: "2017-07-21T17:32:28Z"
+      offerEnd: "2017-07-21T17:32:28Z"
