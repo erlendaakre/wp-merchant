@@ -21,15 +21,15 @@ class MerchantServiceImpl(persistentEntityRegistry: PersistentEntityRegistry, sy
   override def getMerchant(id: UUID) = ServiceCall { _ =>
     refFor(id).ask(GetMerchant).map {
       case Some(merchant) => com.frostvoid.wpMerchant.merchant.api.Merchant(Some(id), merchant.name)
-      case None => throw NotFound(s"Merchant with id $id")
+      case None => throw NotFound(s"Could not find merchant with id $id")
     }
   }
 
-  override def createMerchant = ServiceCall { createMerchant =>
+  override def createMerchant = ServiceCall { merchant =>
     val newId = UUID.randomUUID()
 
-    refFor(newId).ask(CreateMerchant(createMerchant.name)).map { _ =>
-      com.frostvoid.wpMerchant.merchant.api.Merchant(Some(newId), createMerchant.name)
+    refFor(newId).ask(CreateMerchant(merchant.name)).map { _ =>
+      com.frostvoid.wpMerchant.merchant.api.Merchant(Some(newId), merchant.name)
     }
   }
 }

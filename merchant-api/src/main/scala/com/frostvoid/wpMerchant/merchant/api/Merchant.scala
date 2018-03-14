@@ -15,10 +15,10 @@ object Merchant {
 
 
 // Commands
-case class CreateMerchant(name: String)
+case class CreateMerchantRequest(name: String)
 
-object CreateMerchant {
-  implicit val format: Format[CreateMerchant] = Json.format
+object CreateMerchantRequest {
+  implicit val format: Format[CreateMerchantRequest] = Json.format
 }
 
 
@@ -28,7 +28,7 @@ sealed trait MerchantEvent {
 }
 
 case class MerchantCreated(merchant: Merchant) extends MerchantEvent {
-  override def id = merchant.safeId
+  override def id: UUID = merchant.safeId
 }
 
 object MerchantCreated {

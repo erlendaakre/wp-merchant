@@ -4,7 +4,7 @@ version in ThisBuild := "1.0-SNAPSHOT"
 scalaVersion in ThisBuild := "2.12.4"
 
 val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
-val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
+val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5" % Test
 
 lazy val `wp-merchant` = (project in file("."))
   .aggregate(`merchant-api`, `merchant-impl`)

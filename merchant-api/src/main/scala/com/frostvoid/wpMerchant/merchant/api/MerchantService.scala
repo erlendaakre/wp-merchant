@@ -3,9 +3,7 @@ package com.frostvoid.wpMerchant.merchant.api
 import java.util.UUID
 
 import akka.NotUsed
-import com.lightbend.lagom.scaladsl.api.broker.Topic
-import com.lightbend.lagom.scaladsl.api.broker.kafka.{KafkaProperties, PartitionKeyStrategy}
-import com.lightbend.lagom.scaladsl.api.{Service, ServiceCall}
+import com.lightbend.lagom.scaladsl.api.{Descriptor, Service, ServiceCall}
 
 object MerchantService {
   val TopicName = "merchant"
@@ -19,9 +17,9 @@ trait MerchantService extends Service {
 
   def getMerchant(id: UUID): ServiceCall[NotUsed, Merchant]
 
-  def createMerchant: ServiceCall[CreateMerchant, Merchant]
+  def createMerchant: ServiceCall[CreateMerchantRequest, Merchant]
 
-  override final def descriptor = {
+  override final def descriptor: Descriptor = {
     import MerchantService._
     import Service._
 

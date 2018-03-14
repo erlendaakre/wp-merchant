@@ -30,7 +30,7 @@ abstract class MerchantApplication(context: LagomApplicationContext)
     with AhcWSComponents {
 
   // Bind the service that this server provides
-  override lazy val lagomServer = serverFor[MerchantService](wire[MerchantServiceImpl])
+  override lazy val lagomServer: LagomServer = serverFor[MerchantService](wire[MerchantServiceImpl])
 
   // Register the JSON serializer registry
   override lazy val jsonSerializerRegistry = MerchantSerializerRegistry
