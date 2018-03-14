@@ -5,22 +5,19 @@ Partial implementation of the wp-merchant api described:
 * and in the `swagger.yaml` file
 
 ## Startup 
-Start up lagom with `sbt runAll`
+Start up http server with `sbt run`
 
-view the service gateway at <http://localhost:9000> to confirm all services are running:
-* Merchant service should be running on port 55045
-* Item service should be running on port ????
-* Offer service should be running on port ????
+rest api is now running at <http://localhost:8080> 
 
 ## Usage
 
 ### Get non-existing merchant
-curl http://localhost:9000/api/v1/merchant/e63cc5c2-9d41-4e04-9f57-92c35343f1a6
+curl http://localhost:8080/api/v1/merchant/1701
 
 ### Create merchant
-curl -H "Content-Type: application/json" -X POST http://localhost:9000/api/v1/merchant -d '{ "name": "A merchant" }'
+curl -H "Content-Type: application/json" -X POST http://localhost:8080/api/v1/merchant -d '{ id: 0, "name": "A merchant" }'
 
-This returns the id of the created merchant, this id can be used with the get request above
+This returns the newly created merchant, this id can then be used with the get request above to see it working
 
 ## Notes and assumptions
 
