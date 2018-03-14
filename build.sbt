@@ -1,31 +1,25 @@
-organization in ThisBuild := "com.frostvoid"
-version in ThisBuild := "1.0-SNAPSHOT"
+name := "WpMerchant"
+organization := "com.frostvoid"
+version := "1.0-SNAPSHOT"
 
-scalaVersion in ThisBuild := "2.12.4"
+scalaVersion := "2.12.4"
 
-val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
-val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5" % Test
+val akkaVersion = "2.5.2"
+val akkaHttpVersion = "10.1.0"
+val Json4sVersion = "3.2.11"
+val scalaTestVersion = "3.0.5"
 
-lazy val `wp-merchant` = (project in file("."))
-  .aggregate(`merchant-api`, `merchant-impl`)
+libraryDependencies ++= Seq(
+    "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+    "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
 
-lazy val `merchant-api` = (project in file("merchant-api"))
-  .settings(
-    libraryDependencies ++= Seq(
-      lagomScaladslApi
-    )
+    "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+
+    "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test,
+    "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
+
+    "org.scalatest" %% "scalatest" % scalaTestVersion % Test
   )
 
-lazy val `merchant-impl` = (project in file("merchant-impl"))
-  .enablePlugins(LagomScala)
-  .settings(
-    libraryDependencies ++= Seq(
-      lagomScaladslPersistenceCassandra,
-      lagomScaladslKafkaBroker,
-      lagomScaladslTestKit,
-      macwire,
-      scalaTest
-    )
-  )
-  .settings(lagomForkedTestSettings: _*)
-  .dependsOn(`merchant-api`)
+mainClass := Some("com.frostvoid.wpMerchant.impl.HttpServer")
