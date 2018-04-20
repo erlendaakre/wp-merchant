@@ -2,26 +2,37 @@ package com.frostvoid.wpMerchant.impl
 
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
-import com.frostvoid.wpMerchant.util.JsonSupport
+import com.frostvoid.wpMerchant.services.{ItemService, MerchantService}
+import com.frostvoid.wpMerchant.util.AkkaSupport
 
 import scala.io.StdIn
 
 /**
-  * HTTP server responsible for redirecting different requests to the appropriate actors
+  * HTTP server responsible for redirecting different requests to the appropriate services
   */
-object HttpServer extends JsonSupport with MerchantService with ItemService {
+object HttpServer extends AkkaSupport {
+  final val ServerPort = 8080
 
+  val merchantService = new MerchantService
+  val itemService = new ItemService
 
   def main(args: Array[String]): Unit = {
-    val routes = merchantRoutes ~ itemRoutes
 
-    val server = Http().bindAndHandle(routes, "localhost", ServerPort)
+    val allRoutes = merchantService.route ~ itemService.route
+
+    val server = Http().bindAndHandle(allRoutes, "localhost", ServerPort)
     println(s"http server running at http://localhost:$ServerPort/")
     println("Press return to exit")
+
     StdIn.readLine()
-    server.flatMap(_.unbind())
-    system.terminate()
-    println("HTTP server and akka system shut down")
+
+    system.terminate().onComplete(shutdown =>
+      if (shutdown.isSuccess) println(s"Akka shutdown successful")
+      else println(s"Problem shutting down Akka system ${shutdown.failed}")
+    )
+    server.flatMap(_.unbind()).onComplete(shutdown =>
+      if (shutdown.isSuccess) println(s"HTTP server shutdown successful")
+      else println(s"Problem shutting down HTTP server: ${shutdown.failed}")
+    )
   }
 }

@@ -12,12 +12,12 @@ rest api is now running at <http://localhost:8080>
 ## Usage
 
 ### Get non-existing merchant
-curl http://localhost:8080/api/v1/merchant/1701
+curl -vw "\n" http://localhost:8080/api/v1/merchant/1701
 
 ### Create merchant
-curl -H "Content-Type: application/json" -X POST http://localhost:8080/api/v1/merchant -d '{ id: 0, "name": "A merchant" }'
+curl -w "\n" -H "Content-Type: application/json" -X POST http://localhost:8080/api/v1/merchant -d '{ "id": 0, "name": "ACME" }'
 
-This returns the newly created merchant, this id can then be used with the get request above to see it working
+This returns the newly created merchant, this id can then be used with the get request above to retrieve the merchant
 
 ## Notes and assumptions
 
@@ -25,4 +25,4 @@ This returns the newly created merchant, this id can then be used with the get r
   the following goal *"Allowing a merchant to create a new simple offer".*
 * The API created for the Merchant is more extensive than required by the task, and allows for general use of the merchant/offer/item system if there are multiple merchants.
 * An offer does not have it's own description, but the item that is part of the offer does.
-* Item and Offer are separate entities, Items are not directly tied to Merchants, for a real system they might be tied to Merchants or left unattached.
+* Item and Offer are separate entities, Items are not directly tied to Merchants, for a real system they might be tied to Merchants or left independent.

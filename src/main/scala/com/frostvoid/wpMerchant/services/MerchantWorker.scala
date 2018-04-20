@@ -7,7 +7,7 @@ import com.frostvoid.wpMerchant.util.IdGenerator
 /**
   * @author eaakre - 2018-03-14
   */
-class MerchantActor extends Actor with ActorLogging with IdGenerator  {
+class MerchantWorker extends Actor with ActorLogging with IdGenerator  {
 
   private val merchantStore = collection.mutable.Map.empty[Int, Merchant]
 
@@ -31,6 +31,6 @@ class MerchantActor extends Actor with ActorLogging with IdGenerator  {
   }
 }
 
-object MerchantActor {
-  def props(): Props = Props(new MerchantActor)
+object MerchantWorker {
+  def props(): Props = Props(new MerchantWorker)
 }
