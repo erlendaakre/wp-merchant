@@ -12,13 +12,13 @@ import com.frostvoid.wpMerchant.impl.BaseService
 class MerchantService(implicit val system: ActorSystem, implicit val timeout: Timeout) extends BaseService {
   final val serviceName = "merchant"
 
-  private val merchantActor: ActorRef = system.actorOf(Props[MerchantWorker])
+  private val merchantWorker: ActorRef = system.actorOf(Props[MerchantWorker], "merchantWorker")
 
   val route: Route =
     get {
       pathPrefix(servicePath) {
         path(IntNumber) { id =>
-          onSuccess(merchantActor ? GetMerchantRequest(id)) {
+          onSuccess(merchantWorker ? GetMerchantRequest(id)) {
             case reply: MerchantReturned => complete(StatusCodes.OK, reply.merchant)
             case EmptyReply => complete(StatusCodes.NotFound)
           }
@@ -28,7 +28,7 @@ class MerchantService(implicit val system: ActorSystem, implicit val timeout: Ti
       post {
         path(servicePath) {
           entity(as[Merchant]) { merchant =>
-            onSuccess(merchantActor ? AddMerchantRequest(merchant.name)) {
+            onSuccess(merchantWorker ? AddMerchantRequest(merchant.name)) {
               case reply: MerchantReturned => complete(StatusCodes.Created, reply.merchant)
               case EmptyReply => complete(StatusCodes.InternalServerError, "unable to add new merchant")
             }
