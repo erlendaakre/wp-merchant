@@ -3,7 +3,7 @@ package com.frostvoid.wpMerchant.api
 // Models
 case class Merchant(id: Int, name: String)
 case class Item(id: Int, name: String, description: String)
-case class Offer(id: Int, merchant: Int, price: Double, currency: String, start: String, end: String)
+case class Offer(id: Int, merchant: Int, item: Int, price: Double, currency: String)
 
 // Actor Requests and responses
 sealed trait ApiRequest
@@ -33,6 +33,11 @@ sealed trait OfferRequest
 sealed trait OfferReply
 
 case class GetOfferRequest(id: Int) extends OfferRequest
+case class GetOffersRequest(merchantId: Int) extends OfferRequest
+case class AddOfferRequest(merchant: Int, item: Int, price: Double, currency: String) extends MerchantRequest
+
+case class OfferReturned(offer: Offer) extends OfferReply
+case class OffersReturned(offers: List[Offer]) extends OfferReply
 
 
 // Common

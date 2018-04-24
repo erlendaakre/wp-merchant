@@ -21,7 +21,7 @@ class OfferService(implicit val system: ActorSystem, implicit val timeout: Timeo
     TODO: add routes and implement OfferWorker for:
       POST  /offer
       GET   /offer/{offerId}
-      GET   /offer/findByMerchant/{merchantId}
+      GET   /offer/byMerchant/{merchantId}
    */
 
   val route: Route =
