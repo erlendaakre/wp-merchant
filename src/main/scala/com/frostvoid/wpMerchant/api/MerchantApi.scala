@@ -21,14 +21,15 @@ case class MerchantReturned(merchant: Merchant) extends MerchantReply
 // Item
 sealed trait ItemRequest
 sealed trait ItemReply
-case class GetItemRequest(id: Int) extends MerchantRequest
 
+case class GetItemRequest(id: Int) extends ItemRequest
 
 
 // Offer
 sealed trait OfferRequest
 sealed trait OfferReply
-case class GetOfferRequest(id: Int) extends MerchantRequest
+
+case class GetOfferRequest(id: Int) extends OfferRequest
 
 
 // Common
