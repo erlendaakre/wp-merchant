@@ -5,7 +5,7 @@ import com.frostvoid.wpMerchant.api._
 import com.frostvoid.wpMerchant.util.IdGenerator
 
 /**
-  * @author eaakre - 2018-03-14
+  * Handles retrieval and storage of Items in a mutable map
   */
 class ItemWorker extends Actor with ActorLogging with IdGenerator {
 

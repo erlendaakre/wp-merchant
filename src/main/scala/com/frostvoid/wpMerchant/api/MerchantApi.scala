@@ -3,7 +3,7 @@ package com.frostvoid.wpMerchant.api
 // Models
 case class Merchant(id: Int, name: String)
 case class Item(id: Int, name: String, description: String)
-case class Offer(id: Int, owner: Merchant, price: Double, currency: String, start: String, end: String)
+case class Offer(id: Int, merchant: Int, price: Double, currency: String, start: String, end: String)
 
 // Actor Requests and responses
 sealed trait ApiRequest

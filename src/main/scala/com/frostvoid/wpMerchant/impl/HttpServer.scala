@@ -2,23 +2,26 @@ package com.frostvoid.wpMerchant.impl
 
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
-import com.frostvoid.wpMerchant.services.{ItemService, MerchantService}
+import com.frostvoid.wpMerchant.services.{ItemService, MerchantService, OfferService}
 import com.frostvoid.wpMerchant.util.AkkaSupport
 
 import scala.io.StdIn
 
 /**
-  * HTTP server responsible for redirecting different requests to the appropriate services
+  * HTTP server exposing the Merchant REST api.
+  *
+  * Request are redirected to their appropriate services
   */
 object HttpServer extends AkkaSupport {
   final val ServerPort = 8080
 
   val merchantService = new MerchantService
   val itemService = new ItemService
+  val offerService = new OfferService
 
   def main(args: Array[String]): Unit = {
 
-    val allRoutes = merchantService.route ~ itemService.route
+    val allRoutes = merchantService.route ~ itemService.route ~ offerService.route
 
     val server = Http().bindAndHandle(allRoutes, "localhost", ServerPort)
     println(s"http server running at http://localhost:$ServerPort/")

@@ -7,6 +7,9 @@ import akka.util.Timeout
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
 
+/**
+  * Provides basic Akka functionality
+  */
 trait AkkaSupport {
   implicit val system = ActorSystem("wp-merchant")
   implicit val materializer = ActorMaterializer()
