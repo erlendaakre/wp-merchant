@@ -9,7 +9,7 @@ import com.frostvoid.wpMerchant.util.IdGenerator
   */
 class MerchantWorker extends Actor with ActorLogging with IdGenerator {
 
-  private val merchantStore = collection.mutable.Map.empty[Int, Merchant] // Int = Merchant.
+  private val merchantStore = collection.mutable.Map.empty[Int, Merchant] // Int = Merchant.id
 
   override def receive: Receive = {
     case GetMerchantRequest(id) => sender() ! merchantStore.get(id).fold(EmptyReply: MerchantReply)(m => MerchantReturned(m))

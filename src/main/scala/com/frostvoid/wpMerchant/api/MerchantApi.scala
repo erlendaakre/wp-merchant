@@ -23,6 +23,9 @@ sealed trait ItemRequest
 sealed trait ItemReply
 
 case class GetItemRequest(id: Int) extends ItemRequest
+case class AddItemRequest(name: String, description: String) extends ItemRequest
+
+case class ItemReturned(item: Item) extends ItemReply
 
 
 // Offer

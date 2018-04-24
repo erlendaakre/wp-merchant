@@ -4,10 +4,9 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.RawHeader
-import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import com.frostvoid.wpMerchant.api.Merchant
-import com.frostvoid.wpMerchant.services.{ItemService, MerchantService}
+import com.frostvoid.wpMerchant.services.MerchantService
 import com.frostvoid.wpMerchant.util.{AkkaSupport, JsonSupport}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
@@ -21,9 +20,7 @@ class MerchantTest extends WordSpec with Matchers with BeforeAndAfterAll with Ak
 
   override def beforeAll {
     val merchantService = new MerchantService
-    val itemService = new ItemService
-    val allRoutes = merchantService.route ~ itemService.route
-    server = Http().bindAndHandle(allRoutes, "localhost", 8080)
+    server = Http().bindAndHandle(merchantService.route, "localhost", 8080)
   }
 
   override def afterAll {
@@ -47,7 +44,7 @@ class MerchantTest extends WordSpec with Matchers with BeforeAndAfterAll with Ak
     "allow a new merchant to be created" in {
       val newMerchantEntity = Await.result(Marshal(newMerchant).to[MessageEntity], 1.second)
 
-      val req = HttpRequest(uri = "http://localhost:8080/api/v1/merchant?id=500", method = HttpMethods.POST,
+      val req = HttpRequest(uri = "http://localhost:8080/api/v1/merchant", method = HttpMethods.POST,
         headers = List(RawHeader("Content-Type", "application/json")), entity = newMerchantEntity)
       val res = Await.result(Http().singleRequest(req), reqTimeout)
 
