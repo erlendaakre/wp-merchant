@@ -19,6 +19,14 @@ curl -w "\n" -H "Content-Type: application/json" -X POST http://localhost:8080/a
 
 This returns the newly created merchant, this id can then be used with the get request above to retrieve the merchant
 
+### Create item
+curl -w "\n" -H "Content-Type: application/json" -X POST http://localhost:8080/api/v1/item -d '{ "id": 0, "name": "Anvil", "description": "drop on roadrunner" }'
+
+### Create offer
+A valid merchant id and item id is required to create an offer.
+
+curl -w "\n" -H "Content-Type: application/json" -X POST http://localhost:8080/api/v1/offer -d '{ "id": 0, "merchant": ID, "item": ID, "price": 15.89, "currency": "CAD" }'
+
 ## Notes and assumptions
 
 * This implementation covers the basic functionality in the API specification to allow for

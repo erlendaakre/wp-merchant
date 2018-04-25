@@ -27,7 +27,7 @@ class OfferService(implicit val system: ActorSystem, implicit val timeout: Timeo
         path(IntNumber) { id =>
           onSuccess(offerWorker ? GetOfferRequest(id)) {
             case reply: OfferReturned => complete(StatusCodes.OK, reply.offer)
-            case EmptyReply => complete(StatusCodes.NotFound)
+            case OfferNotFound => complete(StatusCodes.NotFound)
           }
         }
       }
@@ -40,7 +40,7 @@ class OfferService(implicit val system: ActorSystem, implicit val timeout: Timeo
               case OfferNotCreatedBecauseMerchantInvalid => complete(StatusCodes.BadRequest, s"Invalid merchant id '${offer.merchant}'")
               case OfferNotCreatedBecauseItemInvalid => complete(StatusCodes.BadRequest, s"Invalid item id '${offer.item}'")
               case OfferNotCreatedBecauseNegativePrice => complete(StatusCodes.BadRequest, s"Price of item must be 0 or greater")
-              case EmptyReply => complete(StatusCodes.InternalServerError, "unable to add new offer")
+              case OfferNotCreated => complete(StatusCodes.InternalServerError, "unable to add new offer")
             }
           }
         }

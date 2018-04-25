@@ -16,6 +16,8 @@ case class GetMerchantRequest(id: Int) extends MerchantRequest
 case class AddMerchantRequest(name: String) extends MerchantRequest
 
 case class MerchantReturned(merchant: Merchant) extends MerchantReply
+case object MerchantNotFound extends MerchantReply
+case object MerchantNotCreated extends MerchantReply
 
 
 // Item
@@ -26,6 +28,8 @@ case class GetItemRequest(id: Int) extends ItemRequest
 case class AddItemRequest(name: String, description: String) extends ItemRequest
 
 case class ItemReturned(item: Item) extends ItemReply
+case object ItemNotFound extends ItemReply
+case object ItemNotCreated extends ItemReply
 
 
 // Offer
@@ -38,9 +42,8 @@ case class AddOfferRequest(merchant: Int, item: Int, price: Double, currency: St
 
 case class OfferReturned(offer: Offer) extends OfferReply
 case class OffersReturned(offers: List[Offer]) extends OfferReply
+case object OfferNotFound extends OfferReply
+case object OfferNotCreated extends OfferReply
 case object OfferNotCreatedBecauseMerchantInvalid extends OfferReply
 case object OfferNotCreatedBecauseItemInvalid extends OfferReply
 case object OfferNotCreatedBecauseNegativePrice extends OfferReply
-
-// Common
-case object EmptyReply extends MerchantReply with ItemReply with OfferReply

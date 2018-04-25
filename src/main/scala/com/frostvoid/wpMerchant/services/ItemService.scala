@@ -27,7 +27,7 @@ class ItemService(implicit val system: ActorSystem, implicit val timeout: Timeou
         path(IntNumber) { id =>
           onSuccess(itemWorker ? GetItemRequest(id)) {
             case reply: ItemReturned => complete(StatusCodes.OK, reply.item)
-            case EmptyReply => complete(StatusCodes.NotFound)
+            case ItemNotFound => complete(StatusCodes.NotFound)
           }
         }
       }
@@ -37,7 +37,7 @@ class ItemService(implicit val system: ActorSystem, implicit val timeout: Timeou
           entity(as[Item]) { item =>
             onSuccess(itemWorker ? AddItemRequest(item.name, item.description)) {
               case reply: ItemReturned => complete(StatusCodes.Created, reply.item)
-              case EmptyReply => complete(StatusCodes.InternalServerError, "unable to add new item")
+              case ItemNotCreated => complete(StatusCodes.InternalServerError, "unable to add new item")
             }
           }
         }

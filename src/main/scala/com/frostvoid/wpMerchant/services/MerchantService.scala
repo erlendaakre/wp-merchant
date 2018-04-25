@@ -27,7 +27,7 @@ class MerchantService(implicit val system: ActorSystem, implicit val timeout: Ti
         path(IntNumber) { id =>
           onSuccess(merchantWorker ? GetMerchantRequest(id)) {
             case reply: MerchantReturned => complete(StatusCodes.OK, reply.merchant)
-            case EmptyReply => complete(StatusCodes.NotFound)
+            case MerchantNotFound => complete(StatusCodes.NotFound)
           }
         }
       }
@@ -37,7 +37,7 @@ class MerchantService(implicit val system: ActorSystem, implicit val timeout: Ti
           entity(as[Merchant]) { merchant =>
             onSuccess(merchantWorker ? AddMerchantRequest(merchant.name)) {
               case reply: MerchantReturned => complete(StatusCodes.Created, reply.merchant)
-              case EmptyReply => complete(StatusCodes.InternalServerError, "unable to add new merchant")
+              case MerchantNotCreated => complete(StatusCodes.InternalServerError, "unable to add new merchant")
             }
           }
         }
