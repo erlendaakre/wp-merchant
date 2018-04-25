@@ -4,9 +4,10 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.RawHeader
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import com.frostvoid.wpMerchant.api.{Item, Merchant, Offer}
-import com.frostvoid.wpMerchant.services.OfferService
+import com.frostvoid.wpMerchant.services.{ItemService, MerchantService, OfferService}
 import com.frostvoid.wpMerchant.util.{AkkaSupport, JsonSupport}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
@@ -19,8 +20,13 @@ class OfferTest extends WordSpec with Matchers with BeforeAndAfterAll with AkkaS
   private val reqTimeout = 10.seconds
 
   override def beforeAll {
+    val itemService = new ItemService
+    val merchantService = new MerchantService
     val offerService = new OfferService
-    server = Http().bindAndHandle(offerService.route, "localhost", 8080)
+
+    val allRoutes = merchantService.route ~ itemService.route ~ offerService.route
+
+    server = Http().bindAndHandle(allRoutes, "localhost", 8080)
   }
 
   override def afterAll {

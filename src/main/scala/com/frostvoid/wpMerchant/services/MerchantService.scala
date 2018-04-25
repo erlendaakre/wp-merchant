@@ -19,7 +19,7 @@ import com.frostvoid.wpMerchant.impl.BaseService
 class MerchantService(implicit val system: ActorSystem, implicit val timeout: Timeout) extends BaseService {
   final val serviceName = "merchant"
 
-  private val merchantWorker: ActorRef = system.actorOf(Props[MerchantWorker], "merchantWorker")
+  val merchantWorker: ActorRef = system.actorOf(Props[MerchantWorker], "merchantWorker")
 
   val route: Route =
     get {
