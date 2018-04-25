@@ -34,11 +34,12 @@ sealed trait OfferReply
 
 case class GetOfferRequest(id: Int) extends OfferRequest
 case class GetOffersRequest(merchantId: Int) extends OfferRequest
-case class AddOfferRequest(merchant: Int, item: Int, price: Double, currency: String) extends MerchantRequest
+case class AddOfferRequest(merchant: Int, item: Int, price: Double, currency: String) extends OfferRequest
 
 case class OfferReturned(offer: Offer) extends OfferReply
 case class OffersReturned(offers: List[Offer]) extends OfferReply
-
+case object OfferNotCreatedBecauseMerchantInvalid extends OfferReply
+case object OfferNotCreatedBecauseItemInvalid extends OfferReply
 
 // Common
 case object EmptyReply extends MerchantReply with ItemReply with OfferReply

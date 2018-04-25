@@ -1,10 +1,12 @@
 package com.frostvoid.wpMerchant.services
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.util.Timeout
+import akka.pattern.ask
+import com.frostvoid.wpMerchant.api._
 import com.frostvoid.wpMerchant.impl.BaseService
 
 /**
@@ -17,19 +19,28 @@ import com.frostvoid.wpMerchant.impl.BaseService
 class OfferService(implicit val system: ActorSystem, implicit val timeout: Timeout) extends BaseService {
   final val serviceName = "offer"
 
-  /*
-    TODO: add routes and implement OfferWorker for:
-      POST  /offer
-      GET   /offer/{offerId}
-      GET   /offer/byMerchant/{merchantId}
-   */
+  private val offerWorker: ActorRef = system.actorOf(Props[OfferWorker], "offerWorker")
 
   val route: Route =
     get {
       pathPrefix(servicePath) {
         path(IntNumber) { id =>
-          complete(StatusCodes.ServiceUnavailable, "Offer API not yet implemented")
+          onSuccess(offerWorker ? GetOfferRequest(id)) {
+            case reply: OfferReturned => complete(StatusCodes.OK, reply.offer)
+            case EmptyReply => complete(StatusCodes.NotFound)
+          }
         }
       }
-    }
-}
+    } ~
+      post {
+        path(servicePath) {
+          entity(as[Offer]) { offer =>
+            onSuccess(offerWorker ? AddOfferRequest(offer.merchant, offer.item, offer.price, offer.currency)) {
+              case reply: OfferReturned => complete(StatusCodes.Created, reply.offer)
+              case OfferNotCreatedBecauseMerchantInvalid => complete(StatusCodes.BadRequest, s"Invalid merchant id '${offer.merchant}'")
+              case OfferNotCreatedBecauseItemInvalid => complete(StatusCodes.BadRequest, s"Invalid item id '${offer.item}'")
+              case EmptyReply => complete(StatusCodes.InternalServerError, "unable to add new offer")
+            }
+          }
+        }
+      }}
