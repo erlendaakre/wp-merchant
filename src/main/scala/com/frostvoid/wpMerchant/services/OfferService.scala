@@ -39,6 +39,7 @@ class OfferService(implicit val system: ActorSystem, implicit val timeout: Timeo
               case reply: OfferReturned => complete(StatusCodes.Created, reply.offer)
               case OfferNotCreatedBecauseMerchantInvalid => complete(StatusCodes.BadRequest, s"Invalid merchant id '${offer.merchant}'")
               case OfferNotCreatedBecauseItemInvalid => complete(StatusCodes.BadRequest, s"Invalid item id '${offer.item}'")
+              case OfferNotCreatedBecauseNegativePrice => complete(StatusCodes.BadRequest, s"Price of item must be 0 or greater")
               case EmptyReply => complete(StatusCodes.InternalServerError, "unable to add new offer")
             }
           }

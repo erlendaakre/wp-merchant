@@ -40,6 +40,7 @@ case class OfferReturned(offer: Offer) extends OfferReply
 case class OffersReturned(offers: List[Offer]) extends OfferReply
 case object OfferNotCreatedBecauseMerchantInvalid extends OfferReply
 case object OfferNotCreatedBecauseItemInvalid extends OfferReply
+case object OfferNotCreatedBecauseNegativePrice extends OfferReply
 
 // Common
 case object EmptyReply extends MerchantReply with ItemReply with OfferReply
