@@ -29,18 +29,17 @@ class ItemTest extends WordSpec with Matchers with BeforeAndAfterAll with AkkaSu
   }
 
   "The Item Service" should {
+
     "not return an item if given a non-existent ID" in {
-      val req = HttpRequest(uri = "http://localhost:8080/api/v1/item")
+      val req = HttpRequest(uri = "http://localhost:8080/api/v1/item/123456")
       val res = Await.result(Http().singleRequest(req), reqTimeout)
 
       res.status shouldBe StatusCodes.NotFound
     }
-  }
 
-  "The Item Service" should {
+
     val newItem = Item(0, "Duotronic enhancer", "Enhances all things duotronic!")
     var createdItemId = 0 // returned by POST to /item
-
     "allow a new item to be created" in {
       val newItemEntity = Await.result(Marshal(newItem).to[MessageEntity], 1.second)
 
@@ -55,6 +54,8 @@ class ItemTest extends WordSpec with Matchers with BeforeAndAfterAll with AkkaSu
       createdItem.id should be >= 1
       createdItemId = createdItem.id
     }
+
+
     "retrieve a newly created item by ID " in {
       val req = HttpRequest(uri = s"http://localhost:8080/api/v1/item/$createdItemId")
       val res = Await.result(Http().singleRequest(req), reqTimeout)
@@ -66,5 +67,4 @@ class ItemTest extends WordSpec with Matchers with BeforeAndAfterAll with AkkaSu
       retrievedItem.id shouldBe createdItemId
     }
   }
-
 }

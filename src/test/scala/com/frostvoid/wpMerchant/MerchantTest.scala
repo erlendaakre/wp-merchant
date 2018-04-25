@@ -30,17 +30,15 @@ class MerchantTest extends WordSpec with Matchers with BeforeAndAfterAll with Ak
 
   "The Merchant Service" should {
     "not return a merchant if given a non-existent ID" in {
-      val req = HttpRequest(uri = "http://localhost:8080/api/v1/merchant")
+      val req = HttpRequest(uri = "http://localhost:8080/api/v1/merchant/1701")
       val res = Await.result(Http().singleRequest(req), reqTimeout)
 
       res.status shouldBe StatusCodes.NotFound
     }
-  }
 
-  "The Merchant Service" should {
+
     val newMerchant = Merchant(0, "Test Merchant")
     var createdMerchantId = 0 // returned by POST to /merchant
-
     "allow a new merchant to be created" in {
       val newMerchantEntity = Await.result(Marshal(newMerchant).to[MessageEntity], 1.second)
 
@@ -54,6 +52,8 @@ class MerchantTest extends WordSpec with Matchers with BeforeAndAfterAll with Ak
       createdMerchant.id should be >= 1
       createdMerchantId = createdMerchant.id
     }
+
+
     "retrieve a newly created merchant by ID " in {
       val req = HttpRequest(uri = s"http://localhost:8080/api/v1/merchant/$createdMerchantId")
       val res = Await.result(Http().singleRequest(req), reqTimeout)
